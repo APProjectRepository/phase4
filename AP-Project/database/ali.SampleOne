@@ -1,0 +1,5 @@
+3 4
+name String height decimal isMale boolean pk Integer 
+"a",123.0,true,2
+"asd",12.0,false,1
+"ali",1.2,true,2
