@@ -9,7 +9,7 @@ public class ORM {
 	private ArrayList<Method> getterMethods;
 	private Class<?> clazz;
 
-	public ORM(Class<?> c) throws InvalidORClass {
+	public ORM(Class<?> c) throws InvalidORClass  {
 		clazz = c;
 		setterMethods = new ArrayList<>();
 		getterMethods = new ArrayList<>();
@@ -25,7 +25,9 @@ public class ORM {
 			else if (method.isAnnotationPresent(Setter.class))
 				setterMethods.add(method);
 		}
-
+		
+		
+		
 	}
 
 	public String getORMTableName() {
@@ -44,9 +46,10 @@ public class ORM {
 		return clazz;
 	}
 
-	public Object createObject() throws InstantiationException,
-			IllegalAccessException {
+	public Object createObject() throws InstantiationException, IllegalAccessException {
 		return clazz.newInstance();
 	}
+	
+	
 
 }

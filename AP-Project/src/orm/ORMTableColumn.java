@@ -7,7 +7,7 @@ public class ORMTableColumn extends TableColumn {
 
 	private String title;
 	private boolean isKey;
-
+	
 	public ORMTableColumn(Table table, String name, String type) {
 		super(table, name, type);
 		// TODO Auto-generated constructor stub
@@ -28,5 +28,9 @@ public class ORMTableColumn extends TableColumn {
 	public void setKey(boolean isKey) {
 		this.isKey = isKey;
 	}
+
+	
+	
+	
 
 }

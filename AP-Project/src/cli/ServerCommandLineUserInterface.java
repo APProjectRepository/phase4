@@ -1,5 +1,7 @@
 package cli;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Vector;
 
 import parser.ServerParser;
@@ -15,6 +17,7 @@ public class ServerCommandLineUserInterface {
 		try {
 			String dsPath = args[0];
 			int port = Integer.valueOf(args[1]);
+			System.out.println(args.length);
 
 			// Get commands from the user and run them on the storage.
 			DataStorage ds = new DataStorage(dsPath);
@@ -22,6 +25,8 @@ public class ServerCommandLineUserInterface {
 			InputReader input = new ConsoleInputReader();
 			OutputWriter output = new ConsoleOutputWriter();
 			createUserInfoTables(ds);
+			String createGuest = "create user guest identified by ;";
+			String grantConnectGuest = "grant connect to guest;";
 
 			// Instantiate the network interface.
 			new ServerNetworkInterface(ds, port).start();
@@ -31,13 +36,25 @@ public class ServerCommandLineUserInterface {
 							+ " and port " + port, "", 0));
 
 			// for each input command of server
+			try {
+				ds.execute(parser.parse(createGuest));
+			} catch (Exception e) {
+			}
+			try {
+				ds.execute(parser.parse(grantConnectGuest));
+			} catch (Exception e) {
+
+			}
 			while (input.hasNext()) {
 				try {
 					String command = input.next(); // next command
 					SingleTableQuery q = parser.parse(command);
 					QueryResult res = ds.execute(q);
+					
 					output.format(res); // write the query result into server
-										// console.
+					
+
+					// console.
 				} catch (Exception e) {
 					output.format(new QueryResult(false, e.getMessage(), "", 0));
 				}
@@ -49,6 +66,12 @@ public class ServerCommandLineUserInterface {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getSubnet() throws UnknownHostException {
+		InetAddress IP = InetAddress.getLocalHost();
+		String subnet = IP.getHostAddress();
+		return subnet.substring(0, subnet.lastIndexOf("."));
 	}
 
 	// Create 'users' and 'permissions' tables for storing users' data and

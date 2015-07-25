@@ -1,4 +1,6 @@
 package query.condition;
 
-public abstract class Condition {
+
+public abstract class Condition
+{
 }

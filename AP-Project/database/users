@@ -1,6 +1,4 @@
-5 4
+2 4
 username string password string connect boolean DBA boolean 
+"guest","",true,true
 "ali","123",true,true
-"ali1","123",false,false
-"mamal","123",true,true
-"mosi","123",true,true

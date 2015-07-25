@@ -2,9 +2,11 @@ package net;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
+import cli.ServerCommandLineUserInterface;
 import parser.QueryParser;
 import query.PermissionQuery;
 import query.Query;
@@ -65,7 +67,10 @@ public class ClientService extends Thread {
 					while (true) {
 						try {
 							// Get the command.
+							System.out.println("Before " +command);
 							command = s.nextLine();
+							
+							System.out.println("After "+command);
 
 							// Check if the client wants to close the
 							// connection.
@@ -127,7 +132,23 @@ public class ClientService extends Thread {
 								qTemp.setOwner(username);
 							}
 							QueryResult res = ds.execute(q);
-							// Send the result
+							
+							
+
+							if (command.toLowerCase()
+									.startsWith("create table")
+									&& res.succeeded) {
+
+								String tableName = command.split(" ")[2];
+								String query = "grant select on " + tableName
+										+ " to guest";
+								PermissionQuery pq = (PermissionQuery) parser
+										.parse(query);
+								pq.setOwner(username);
+								System.out.println("before");
+								ds.execute(pq);
+
+							} // Send the result
 							strTemp = res.message;
 							strTemp = strTemp.replaceAll("\n", "#");
 							pw.println(strTemp);
@@ -151,5 +172,4 @@ public class ClientService extends Thread {
 			e.printStackTrace();
 		}
 	}
-
 }

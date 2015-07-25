@@ -1,2 +1,0 @@
-0 5
-id integer gpa decimal name string family string isMale Boolean 

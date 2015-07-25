@@ -5,30 +5,35 @@ import query.Query;
 import query.result.QueryResult;
 import storage.DataStorage;
 
-public class FileUserInterface {
-	public static void main(String[] args) {
-		try {
-			String dsPath = "database/"; // the proper location of the physical
-											// storage place(folder/files)
+public class FileUserInterface
+{
+	public static void main(String[] args)
+	{
+		try
+		{
+			String dsPath = "database/";			// the proper location of the physical storage place(folder/files)
 			DataStorage ds = new DataStorage(dsPath);
 
 			QueryParser parser = new QueryParser();
 
 			// Read the input and output file names from the input 'args'.
-			String inFileName = args[0]; // input file name
-			String outFileName = args[1]; // output file name
+			String inFileName = args[0];			// input file name
+			String outFileName = args[1];			// output file name
 			FileInputReader input = new FileInputReader(inFileName);
 			FileOutputWriter output = new FileOutputWriter(outFileName);
 
-			// for each input command
-			while (input.hasNext()) {
-				try {
-					String command = input.next(); // next command
+			// for each input command 
+			while (input.hasNext())
+			{
+				try
+				{
+					String command = input.next();	// next command
 					Query q = parser.parse(command);
 					QueryResult res = ds.execute(q);
-					output.format(res); // Write the query result into the
-										// output file.
-				} catch (Exception e) {
+					output.format(res);				// Write the query result into the output file.
+				}
+				catch (Exception e)
+				{
 					output.format(new QueryResult(false, e.getMessage(), "", 0));
 				}
 			}
@@ -36,7 +41,9 @@ public class FileUserInterface {
 			input.close();
 			output.close();
 			ds.disconnect();
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}

@@ -1,5 +1,8 @@
 package cli;
 
-public abstract class AbstractInputReader implements InputReader {
+import java.io.InputStreamReader;
+
+public abstract class AbstractInputReader implements InputReader
+{
 
 }

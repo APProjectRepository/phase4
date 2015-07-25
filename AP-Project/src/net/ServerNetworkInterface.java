@@ -6,27 +6,37 @@ import java.net.Socket;
 
 import storage.DataStorage;
 
-public class ServerNetworkInterface extends Thread {
+public class ServerNetworkInterface extends Thread
+{
 	private DataStorage ds;
 	private ServerSocket serverSocket;
-
-	public ServerNetworkInterface(DataStorage ds, int port) {
+	
+	public ServerNetworkInterface(DataStorage ds, int port)
+	{
 		this.ds = ds;
-		try {
+		try
+		{
 			serverSocket = new ServerSocket(port);
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
-	public void run() {
-		try {
-			while (true) {
+	public void run()
+	{
+		try
+		{
+			while (true)
+			{
 				Socket client = serverSocket.accept();
 				new ClientService(ds, client).start();
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}

@@ -4,30 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class TableRow {
+
+public class TableRow
+{
 	public List<RowColumnValue> columnValues;
-
-	public TableRow(Table table, Vector<String> vec, int argsNum) {
+	
+	public TableRow(Table table, Vector<String> vec, int argsNum)
+	{
 		columnValues = new ArrayList<RowColumnValue>();
-
-		for (int i = 0; i < argsNum; ++i) {
-			RowColumnValue r = new RowColumnValue(table, vec.elementAt(i),
-					vec.elementAt(i + argsNum));
+		
+		for (int i = 0; i < argsNum; ++i)
+		{
+			RowColumnValue r = new RowColumnValue(table, vec.elementAt(i), vec.elementAt(i + argsNum));
 			columnValues.add(r);
 		}
 	}
 
-	public int colNum() {
+	public int colNum()
+	{
 		return columnValues.size();
 	}
-
-	public String getColName(int index) {
+	
+	public String getColName(int index)
+	{
 		RowColumnValue r = columnValues.get(index);
-		return r.column.name;
+		return r.column.name;		
 	}
 
-	public String getColValue(int index) {
+	public String getColValue(int index)
+	{
 		RowColumnValue r = columnValues.get(index);
-		return r.value;
+		return r.value;		
 	}
 }

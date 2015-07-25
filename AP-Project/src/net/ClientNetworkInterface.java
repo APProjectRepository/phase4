@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import cli.ServerCommandLineUserInterface;
 import orm.Column;
 import orm.InvalidORClass;
 import orm.Setter;
@@ -74,7 +77,38 @@ public class ClientNetworkInterface {
 		String str;
 		String temporary = "";
 		String create = "";
+		String results = "";
 		try {
+			if (command.toLowerCase().startsWith("select")
+					&& !username.equals("guest")) {
+				for (int i = 139; i <= 141; i++) {
+					String host;
+
+					host = ServerCommandLineUserInterface.getSubnet() + "." + i;
+
+					System.out.println(host);
+
+					if (InetAddress.getByName(host).isReachable(5000)) {
+						System.out.println(true);
+						pw.flush();
+						TemporaryClient guest = null;
+						System.out.println(client.getPort());
+						try {
+							guest = new TemporaryClient(host, client.getPort());
+							results += host + ": #";
+							String commandWithUser = addUserIntoTablename(
+									command, username);
+							results += modify(guest.execute(commandWithUser),
+									username) + "#";
+							guest.disconnect();
+						} catch (Exception e) {
+							System.out.println(e.getMessage());
+						}
+
+					}
+
+				}
+			}
 			if (command.toLowerCase().startsWith("create object")) {
 
 				b = true;
@@ -396,9 +430,11 @@ public class ClientNetworkInterface {
 				throw new AuthenticationException(str);
 
 			if (!b) {
-				str = modify(str, username);
-				str = str.replaceAll("#", "\n");
-				return str;
+				if (!username.equals("guest"))
+					results += "localhost : #";
+				results += modify(str, username) + "#";
+				results = results.replaceAll("#", "\n");
+				return results;
 			}
 
 			if (str.contains("ERROR: Invalid table name ") && b) {
@@ -421,7 +457,11 @@ public class ClientNetworkInterface {
 				| SecurityException | IllegalArgumentException
 				| InvocationTargetException | Error e) {
 			return "You can't create this kind of class";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return "12";
 
 	}
 
@@ -431,6 +471,23 @@ public class ClientNetworkInterface {
 			str = str.substring(0, i).concat(
 					str.substring(username.length() + i + 1));
 		return str;
+	}
+
+	private String addUserIntoTablename(String command, String username) {
+		String[] b = command.split(" +");
+		for (int i = 0; i < b.length; i++) {
+			if (b[i].equals("from")) {
+				if (i + 1 < b.length) {
+					b[i + 1] = username + "." + b[i + 1];
+
+				}
+			}
+		}
+		command = "";
+		for (int i = 0; i < b.length; i++) {
+			command += b[i] + " ";
+		}
+		return command;
 	}
 
 }

@@ -3,61 +3,77 @@ package cli;
 import query.result.QueryResult;
 import net.ClientNetworkInterface;
 
-public class ClientUserInterface {
-	public static void main(String[] args) {
+public class ClientUserInterface
+{
+	public static void main(String[] args)
+	{
 		// Establish connection to the server
-		String serverAddress = ""; // received from GUI
-		int serverPort = 0; // received from GUI
-		String user = ""; // received from GUI
-		String password = ""; // received from GUI
-
+		String serverAddress = "";		// received from GUI
+		int serverPort = 0;				// received from GUI
+		String user = "";				// received from GUI
+		String password = "";			// received from GUI
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				ServerCommandLineUserInterface.main(args);
+			}
+		}).start();
+		
 		ClientNetworkInterface connection = null;
 		ClientGraphics g = new ClientGraphics();
 		InputReader input = new GUIInputReader(g);
 		OutputWriter output = new GUIOutputWriter(g);
 
-		while (true) {
-			try {
-				while (!g.connected) {
+		while (true)
+		{
+			try
+			{
+				while (!g.connected)
+				{
 					Thread.sleep(250);
-					if (g.connectPressed) {
+					if (g.connectPressed)
+					{
 						g.connectPressed = false;
 						serverAddress = g.address;
 						serverPort = Integer.valueOf(g.port);
 						user = g.username;
 						password = g.password;
-
-						try {
-							connection = new ClientNetworkInterface(
-									serverAddress, serverPort, user, password);
+						
+						try
+						{
+							connection = new ClientNetworkInterface(serverAddress, serverPort, user, password);
 							g.connected = true;
 							g.lblStatus.setText("status: connected");
-						} catch (Exception e) {
-							output.format(new QueryResult(false,
-									e.getMessage(), "", 0));
+						}
+						catch (Exception e)
+						{
+							output.format(new QueryResult(false, e.getMessage(), "", 0));
 						}
 					}
 				}
-
-				output.format(new QueryResult(true,
-						"Successfully connected to server!", "", 0));
-
-				try {
-					while (input.hasNext()) {
-						String command = input.next(); // next command
-						if (!command.isEmpty()) {
+				
+				output.format(new QueryResult(true, "Successfully connected to server!", "", 0));
+				
+				try
+				{
+					while (input.hasNext())
+					{
+						Thread.sleep(250);	
+						String command = input.next();								// next command
+						if (!command.isEmpty())
+						{
 							String result = connection.execute(command, user);
-							output.format(new QueryResult(true, result, "", 0)); // Display
-																					// the
-																					// query
-																					// result
-																					// in
-																					// GUI.
+							output.format(new QueryResult(true, result, "", 0)); // Display the query result in GUI.
+							
 						}
 					}
-					output.format(new QueryResult(true,
-							"Connection closed successfully!", "", 0));
-				} catch (Exception e) {
+					output.format(new QueryResult(true, "Connection closed successfully!", "", 0));
+				}
+				catch (Exception e)
+				{
 					output.format(new QueryResult(false, e.getMessage(), "", 0));
 				}
 				g.connected = false;
@@ -66,8 +82,10 @@ public class ClientUserInterface {
 				input.close();
 				output.close();
 				connection.disconnect();
-
-			} catch (Exception e) {
+				
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 		}

@@ -2,7 +2,8 @@ package cli;
 
 import java.io.IOException;
 
-public interface InputReader {
+public interface InputReader
+{
 	boolean hasNext() throws IOException;
 
 	String next() throws IOException;

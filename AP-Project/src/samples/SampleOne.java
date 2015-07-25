@@ -15,7 +15,7 @@ public class SampleOne {
 
 	}
 
-	@Column(name = "name", title = "person's name", type = "String")
+	@Column(name = "name", title = "person's name" , type = "String" )
 	public String getName() {
 		return name;
 	}
@@ -25,32 +25,31 @@ public class SampleOne {
 		return isMale;
 	}
 
-	@Column(name = "height", title = "person's height", type = "decimal")
+	@Column(name = "height", title = "person's height" , type ="decimal")
 	public double getHeight() {
 		return height;
 	}
 
-	@Column(name = "pk", isKey = true, type = "Integer")
+	@Column(name = "pk", isKey = true ,type = "Integer")
 	public int getPk() {
 		return pk;
 	}
-
-	@Setter(fieldName = "name")
+	@Setter(fieldName="name")
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	@Setter(fieldName = "isMale")
+	@Setter(fieldName="isMale")
 	public void setMale(boolean isMale) {
 		this.isMale = isMale;
 	}
 
-	@Setter(fieldName = "height")
+	@Setter(fieldName="height")
 	public void setHeight(double height) {
 		this.height = height;
 	}
 
-	@Setter(fieldName = "pk")
+	@Setter(fieldName="pk")
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
